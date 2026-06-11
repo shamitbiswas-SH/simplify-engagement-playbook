@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Engagement Playbook | Simplify Group</title>
+<style>
+  :root{
+    --ink:#221F20;          /* Near Black */
+    --green:#2D8C4E;        /* Arrow Green */
+    --forest:#1B6B38;
+    --leaf:#5BB574;
+    --mint:#A8DDB5;
+    --palemint:#DFF2E3;
+    --charcoal:#4A4547;
+    --silver:#EAEAEB;
+    --warn-bg:#FFF6E0;
+    --warn-ink:#8A5A00;
+    --warn-edge:#E3B23C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important;animation:none!important} }
+  body{
+    font-family:"Proxima Nova", Arial, Helvetica, sans-serif;
+    color:var(--ink);
+    background:#FFFFFF;
+    line-height:1.45;
+  }
+  a{color:var(--forest)}
+
+  /* ---------- Header ---------- */
+  header{
+    background:var(--ink);
+    color:#fff;
+    padding:22px 28px 20px;
+  }
+  .hd-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+  .hd-mark{
+    display:inline-block;width:12px;height:12px;background:var(--green);
+    transform:rotate(45deg);flex:none;position:relative;top:-1px;
+  }
+  h1{font-size:21px;font-weight:700;letter-spacing:.2px}
+  .hd-sub{color:var(--mint);font-size:13px;font-weight:400}
+  .hd-right{margin-left:auto;font-size:12px;color:var(--silver)}
+
+  /* ---------- Controls ---------- */
+  .controls{
+    background:var(--palemint);
+    border-bottom:1px solid var(--silver);
+    padding:16px 28px;
+  }
+  .controls-inner{max-width:1180px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--charcoal)}
+  select, input[type=search]{
+    font-family:inherit;font-size:14px;color:var(--ink);
+    background:#fff;border:1px solid var(--silver);border-radius:6px;
+    padding:8px 10px;min-width:180px;
+  }
+  select:focus, input:focus, button:focus{outline:2px solid var(--green);outline-offset:1px}
+  input[type=search]{min-width:220px}
+  .btn{
+    font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;
+    background:var(--green);color:#fff;border:none;border-radius:6px;padding:9px 16px;
+  }
+  .btn:hover{background:var(--forest)}
+  .btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--silver)}
+  .btn.secondary:hover{border-color:var(--green);color:var(--forest)}
+
+  /* phase chips */
+  .chips{max-width:1180px;margin:10px auto 0;display:flex;gap:6px;flex-wrap:wrap}
+  .chip{
+    font-size:12px;font-weight:600;border:1px solid var(--silver);border-radius:999px;
+    background:#fff;color:var(--charcoal);padding:5px 12px;cursor:pointer;
+  }
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  /* ---------- Summary strip ---------- */
+  .summary{
+    max-width:1180px;margin:18px auto 0;padding:0 28px;
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--charcoal);
+  }
+  .summary .pill{background:var(--palemint);border:1px solid var(--mint);border-radius:999px;padding:4px 12px;font-weight:600;color:var(--forest)}
+  .summary .count{font-weight:700;color:var(--ink)}
+
+  /* ---------- Phase sections ---------- */
+  main{max-width:1180px;margin:8px auto 80px;padding:0 28px}
+  .phase{margin-top:30px}
+  .phase-h{
+    display:flex;align-items:center;gap:10px;margin-bottom:4px;
+  }
+  .phase-num{
+    flex:none;width:26px;height:26px;border-radius:50%;
+    background:var(--green);color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .phase-h h2{font-size:16px;font-weight:700;letter-spacing:.2px}
+  .phase-body{border-left:3px solid var(--mint);margin-left:12px;padding:8px 0 4px 22px}
+
+  /* task card */
+  .task{
+    border:1px solid var(--silver);border-radius:8px;background:#fff;
+    padding:14px 16px;margin-bottom:10px;page-break-inside:avoid;
+  }
+  .task-top{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+  .task-name{font-size:15px;font-weight:700;flex:1 1 320px}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .badge{font-size:11px;font-weight:700;border-radius:5px;padding:3px 8px;white-space:nowrap}
+  .badge.lead{background:var(--ink);color:#fff}
+  .badge.owner{background:var(--palemint);color:var(--forest);border:1px solid var(--mint)}
+  .task-req{font-size:13.5px;color:var(--charcoal);margin-top:8px}
+  .task-meta{font-size:12.5px;color:var(--charcoal);margin-top:8px;display:flex;gap:18px;flex-wrap:wrap}
+  .task-meta b{color:var(--ink);font-weight:700}
+  .gotcha{
+    margin-top:10px;background:var(--warn-bg);border-left:3px solid var(--warn-edge);
+    color:var(--warn-ink);font-size:13px;padding:8px 12px;border-radius:0 6px 6px 0;
+  }
+  .gotcha b{letter-spacing:.4px}
+
+  /* ---------- States ---------- */
+  .state{max-width:760px;margin:60px auto;padding:0 28px;font-size:14.5px;color:var(--charcoal)}
+  .state h2{font-size:18px;color:var(--ink);margin-bottom:10px}
+  .state code{background:var(--palemint);padding:2px 6px;border-radius:4px;font-size:13px}
+  .state ol{margin:12px 0 0 20px}
+  .state li{margin-bottom:6px}
+  .hidden{display:none}
+
+  /* ---------- Print ---------- */
+  @media print{
+    header{padding:14px 0;background:#fff;color:var(--ink);border-bottom:3px solid var(--green)}
+    .hd-sub{color:var(--charcoal)} .hd-right{display:none}
+    .controls,.chips,.btn{display:none!important}
+    .summary{margin-top:6px}
+    main{margin-bottom:20px}
+    .task{border-color:#bbb}
+    .badge.lead{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+  }
+  @media (max-width:640px){
+    header,.controls,main{padding-left:16px;padding-right:16px}
+    .summary{padding:0 16px}
+    select,input[type=search]{min-width:100%;width:100%}
+    .field{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-row">
+    <span class="hd-mark" aria-hidden="true"></span>
+    <h1>Engagement Playbook</h1>
+    <span class="hd-sub">Every task, deadline and gotcha for each partner engagement</span>
+    <span class="hd-right" id="last-loaded"></span>
+  </div>
+</header>
+
+<div class="controls" id="controls">
+  <div class="controls-inner">
+    <div class="field">
+      <label for="f-org">Organizer</label>
+      <select id="f-org"></select>
+    </div>
+    <div class="field">
+      <label for="f-type">Engagement type</label>
+      <select id="f-type"></select>
+    </div>
+    <div class="field">
+      <label for="f-owner">Owner</label>
+      <select id="f-owner"></select>
+    </div>
+    <div class="field">
+      <label for="f-search">Search</label>
+      <input type="search" id="f-search" placeholder="Find a task, contact, requirement">
+    </div>
+    <button class="btn secondary" id="btn-reset" type="button">Reset filters</button>
+    <button class="btn" id="btn-print" type="button">Print this view</button>
+  </div>
+  <div class="chips" id="phase-chips" role="group" aria-label="Filter by phase"></div>
+</div>
+
+<div class="summary hidden" id="summary"></div>
+
+<main id="board"></main>
+
+<div class="state hidden" id="setup-state">
+  <h2>Connect your Google Sheet</h2>
+  <p>This page has no sheet linked yet. Open <code>index.html</code> and set <code>SHEET_ID</code> at the top of the script to your Google Sheet ID (the long string in the sheet URL between <code>/d/</code> and <code>/edit</code>).</p>
+  <ol>
+    <li>In Google Sheets: File &gt; Share &gt; Publish to web (the whole document, as web page).</li>
+    <li>Also set sharing to "Anyone with the link: Viewer". Both are needed for the gviz feed.</li>
+    <li>Keep the data tab named <code>Playbook</code>, or update <code>SHEET_TAB</code> in the script.</li>
+    <li>Commit and push. The page reads the sheet live on every load.</li>
+  </ol>
+</div>
+
+<div class="state hidden" id="error-state">
+  <h2>Could not load the sheet</h2>
+  <p id="error-detail"></p>
+  <p>Check that the sheet is published to web, link sharing is on, and the tab name matches <code>SHEET_TAB</code>.</p>
+</div>
+
+<div class="state" id="loading-state"><h2>Loading playbook…</h2></div>
+
+<script>
+/* ================= CONFIG ================= */
+const SHEET_ID  = "1Wf1DJYOSA_sVNFW9jtQa0LtoImuNR3qusyCK9mfVU94";
+const SHEET_TAB = "Playbook";
+/* ========================================== */
+
+const COLS = {
+  org:"Organizer", type:"Engagement Type", phase:"Phase", task:"Task",
+  req:"Requirement & Specs", owner:"Owner", lead:"Lead Time",
+  deps:"Dependencies", contact:"External Contact", gotcha:"Gotchas / Notes"
+};
+
+let DATA = [];
+let activePhase = "";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function phaseLabel(p){ return String(p||"").replace(/^\d+\s*-\s*/, ""); }
+function phaseNum(p){ const m = String(p||"").match(/^(\d+)/); return m ? m[1] : "•"; }
+
+async function load(){
+  if(!SHEET_ID || SHEET_ID.startsWith("PASTE_")){
+    $("loading-state").classList.add("hidden");
+    $("controls").classList.add("hidden");
+    $("setup-state").classList.remove("hidden");
+    return;
+  }
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(SHEET_TAB)}`;
+  try{
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}")+1));
+    const headers = json.table.cols.map(c => (c.label || "").trim());
+    DATA = (json.table.rows || []).map(r => {
+      const o = {};
+      headers.forEach((h,i)=>{ o[h] = r.c && r.c[i] && r.c[i].v != null ? String(r.c[i].v).trim() : ""; });
+      return o;
+    }).filter(o => o[COLS.task]);
+    $("loading-state").classList.add("hidden");
+    $("last-loaded").textContent = "Live from Google Sheets · " + new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+    buildFilters();
+    render();
+  }catch(e){
+    $("loading-state").classList.add("hidden");
+    $("error-state").classList.remove("hidden");
+    $("error-detail").textContent = e.message;
+  }
+}
+
+function uniques(key){
+  return [...new Set(DATA.map(r => r[key]).filter(Boolean))];
+}
+
+function fillSelect(id, values, allLabel){
+  const sel = $(id);
+  const prev = sel.value;
+  sel.innerHTML = `<option value="">${allLabel}</option>` + values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+  if([...sel.options].some(o=>o.value===prev)) sel.value = prev;
+}
+
+function buildFilters(){
+  fillSelect("f-org", uniques(COLS.org).sort(), "All organizers");
+  fillSelect("f-type", uniques(COLS.type).sort(), "All types");
+  fillSelect("f-owner", uniques(COLS.owner).sort(), "All owners");
+
+  const phases = uniques(COLS.phase).sort();
+  $("phase-chips").innerHTML = phases.map(p =>
+    `<button class="chip" type="button" data-phase="${esc(p)}" aria-pressed="false">${esc(phaseLabel(p))}</button>`
+  ).join("");
+  $("phase-chips").querySelectorAll(".chip").forEach(ch=>{
+    ch.addEventListener("click", ()=>{
+      activePhase = (activePhase === ch.dataset.phase) ? "" : ch.dataset.phase;
+      $("phase-chips").querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed", String(c.dataset.phase===activePhase)));
+      render();
+    });
+  });
+}
+
+function filtered(){
+  const org = $("f-org").value, type = $("f-type").value, owner = $("f-owner").value;
+  const q = $("f-search").value.trim().toLowerCase();
+  return DATA.filter(r =>
+    (!org || r[COLS.org]===org) &&
+    (!type || r[COLS.type]===type) &&
+    (!owner || r[COLS.owner]===owner) &&
+    (!activePhase || r[COLS.phase]===activePhase) &&
+    (!q || Object.values(r).join(" ").toLowerCase().includes(q))
+  );
+}
+
+function render(){
+  const rows = filtered();
+
+  // summary strip
+  const byOwner = {};
+  rows.forEach(r => { const o = r[COLS.owner] || "Unassigned"; byOwner[o] = (byOwner[o]||0)+1; });
+  const ownerPills = Object.entries(byOwner).sort((a,b)=>b[1]-a[1])
+    .map(([o,n]) => `<span class="pill">${esc(o)}: ${n}</span>`).join("");
+  $("summary").innerHTML = `<span><span class="count">${rows.length}</span> task${rows.length===1?"":"s"} in view</span>${ownerPills}`;
+  $("summary").classList.toggle("hidden", rows.length===0);
+
+  // group by phase
+  const groups = {};
+  rows.forEach(r => { (groups[r[COLS.phase] || "Other"] ??= []).push(r); });
+  const orderedPhases = Object.keys(groups).sort();
+
+  $("board").innerHTML = orderedPhases.map(p => `
+    <section class="phase">
+      <div class="phase-h"><span class="phase-num">${esc(phaseNum(p))}</span><h2>${esc(phaseLabel(p))}</h2></div>
+      <div class="phase-body">
+        ${groups[p].map(r => `
+          <article class="task">
+            <div class="task-top">
+              <div class="task-name">${esc(r[COLS.task])}</div>
+              <div class="badges">
+                ${r[COLS.lead] ? `<span class="badge lead">${esc(r[COLS.lead])}</span>` : ""}
+                ${r[COLS.owner] ? `<span class="badge owner">${esc(r[COLS.owner])}</span>` : ""}
+              </div>
+            </div>
+            ${r[COLS.req] ? `<div class="task-req">${esc(r[COLS.req])}</div>` : ""}
+            ${(r[COLS.deps] || r[COLS.contact]) ? `<div class="task-meta">
+              ${r[COLS.deps] ? `<span><b>Depends on:</b> ${esc(r[COLS.deps])}</span>` : ""}
+              ${r[COLS.contact] ? `<span><b>Contact:</b> ${esc(r[COLS.contact])}</span>` : ""}
+            </div>` : ""}
+            ${r[COLS.gotcha] ? `<div class="gotcha"><b>GOTCHA:</b> ${esc(r[COLS.gotcha])}</div>` : ""}
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `).join("") || `<div class="state"><h2>No tasks match these filters</h2><p>Try resetting the filters, or add rows to the Playbook tab in the sheet.</p></div>`;
+}
+
+["f-org","f-type","f-owner"].forEach(id => $(id).addEventListener("change", render));
+$("f-search").addEventListener("input", render);
+$("btn-reset").addEventListener("click", ()=>{
+  ["f-org","f-type","f-owner"].forEach(id => $(id).value = "");
+  $("f-search").value = "";
+  activePhase = "";
+  document.querySelectorAll("#phase-chips .chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  render();
+});
+$("btn-print").addEventListener("click", ()=>window.print());
+
+load();
+</script>
+</body>
+</html>
