@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Engagement Playbook | Simplify Group</title>
+<title>Events & Webinars | Simplify Group</title>
 <style>
   :root{
     --ink:#221F20; --green:#2D8C4E; --forest:#1B6B38; --leaf:#5BB574;
@@ -162,8 +162,8 @@
 <header>
   <div class="hd-row">
     <span class="hd-mark" aria-hidden="true"></span>
-    <h1 id="home-link" title="Back to all engagements">Engagement Playbook</h1>
-    <span class="hd-sub">Every task, deadline and gotcha for each partner engagement</span>
+    <h1 id="home-link" title="Back to all events and webinars">Events &amp; Webinars</h1>
+    <span class="hd-sub">Every task, deadline and gotcha for each event and webinar</span>
     <div class="hd-clock"><b id="clock">--:--:--</b><span id="today"></span></div>
   </div>
 </header>
@@ -528,7 +528,7 @@ function renderHome(){
     </div></div>
     <div class="wrap">
       ${alertsHTML(allEventNames)}
-      <div class="sect"><h2>Engagements</h2><div class="cards">${cardsHTML || "<p style='font-size:13px;color:var(--charcoal)'>No engagements in this view.</p>"}</div></div>
+      <div class="sect"><h2>Events &amp; Webinars</h2><div class="cards">${cardsHTML || "<p style='font-size:13px;color:var(--charcoal)'>Nothing in this view.</p>"}</div></div>
       ${tplHTML ? `<div class="sect"><h2>Evergreen playbooks (apply to any event)</h2><div class="cards">${tplHTML}</div></div>` : ""}
     </div>`;
 
@@ -547,7 +547,7 @@ function renderSeries(sname){
     return a.localeCompare(b);
   });
   if(!members.length){
-    app.innerHTML = `<div class="wrap"><div class="state"><h2>No webinars found in this series</h2><p>Add rows to the <code>Events</code> tab with Series set to "${esc(sname)}".</p><p style="margin-top:10px"><button class="backbtn" onclick="location.hash=''">&lsaquo; All engagements</button></p></div></div>`;
+    app.innerHTML = `<div class="wrap"><div class="state"><h2>No webinars found in this series</h2><p>Add rows to the <code>Events</code> tab with Series set to "${esc(sname)}".</p><p style="margin-top:10px"><button class="backbtn" onclick="location.hash=''">&lsaquo; All events &amp; webinars</button></p></div></div>`;
     return;
   }
   const allRows = members.flatMap(rowsForEvent);
@@ -555,7 +555,7 @@ function renderSeries(sname){
   const f = evFormat(allRows);
   app.innerHTML = `
     <div class="evbar"><div class="evbar-inner">
-      <button class="backbtn" id="back">&lsaquo; All engagements</button>
+      <button class="backbtn" id="back">&lsaquo; All events &amp; webinars</button>
       <div class="ev-head">
         <h2>${esc(sname)}</h2>
         <span class="ev-meta">${members.length} webinars • paid HPA Pulse program</span>
@@ -605,7 +605,7 @@ function renderEvent(name, isTpl){
     backTo = seriesOf(name) || null;
   }
   if(!rows.length){
-    app.innerHTML = `<div class="wrap"><div class="state"><h2>No tasks found for this engagement</h2><p>Add rows to the <code>Playbook</code> tab with Event set to "${esc(name)}".</p><p style="margin-top:10px"><button class="backbtn" onclick="location.hash=''">&lsaquo; All engagements</button></p></div></div>`;
+    app.innerHTML = `<div class="wrap"><div class="state"><h2>No tasks found here yet</h2><p>Add rows to the <code>Playbook</code> tab with Event set to "${esc(name)}".</p><p style="margin-top:10px"><button class="backbtn" onclick="location.hash=''">&lsaquo; All events &amp; webinars</button></p></div></div>`;
     return;
   }
 
@@ -651,14 +651,14 @@ function renderEvent(name, isTpl){
   }).join("") || `<div class="state"><h2>No tasks match these filters</h2></div>`;
 
   const noteHTML = st.past
-    ? `<div class="note">This engagement is completed. The checklist below is the read-only record.</div>`
+    ? `<div class="note">This event is completed. The checklist below is the read-only record.</div>`
     : st.wrapup
     ? `<div class="note wrapnote">Event date has passed. Close-out tasks below stay open; pre-event tasks are closed. Type "Completed" in the Events tab Status column to lock this record.</div>`
     : "";
 
   app.innerHTML = `
     <div class="evbar"><div class="evbar-inner">
-      <button class="backbtn" id="back">&lsaquo; ${backTo ? esc(backTo) : "All engagements"}</button>
+      <button class="backbtn" id="back">&lsaquo; ${backTo ? esc(backTo) : "All events & webinars"}</button>
       <div class="ev-head">
         <h2>${esc(title)}</h2>
         <span class="ev-count ${st.cls}">${esc(st.label)}</span>
