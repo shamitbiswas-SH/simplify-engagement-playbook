@@ -110,6 +110,7 @@
   .badge{font-size:11px;font-weight:700;border-radius:5px;padding:3px 8px;white-space:nowrap}
   .badge.lead{background:var(--ink);color:#fff}
   .badge.owner{background:var(--palemint);color:var(--forest);border:1px solid var(--mint)}
+  .badge.event{background:#fff;color:var(--charcoal);border:1px solid var(--silver)}
   .task-req{font-size:13.5px;color:var(--charcoal);margin-top:8px}
   .task-meta{font-size:12.5px;color:var(--charcoal);margin-top:8px;display:flex;gap:18px;flex-wrap:wrap}
   .task-meta b{color:var(--ink);font-weight:700}
@@ -167,6 +168,10 @@
       <select id="f-type"></select>
     </div>
     <div class="field">
+      <label for="f-event">Event</label>
+      <select id="f-event"></select>
+    </div>
+    <div class="field">
       <label for="f-owner">Owner</label>
       <select id="f-owner"></select>
     </div>
@@ -212,7 +217,7 @@ const SHEET_TAB = "Playbook";
 const COLS = {
   org:"Organizer", type:"Engagement Type", phase:"Phase", task:"Task",
   req:"Requirement & Specs", owner:"Owner", lead:"Lead Time",
-  deps:"Dependencies", contact:"External Contact", gotcha:"Gotchas / Notes"
+  deps:"Dependencies", contact:"External Contact", gotcha:"Gotchas / Notes", event:"Event"
 };
 
 let DATA = [];
@@ -267,6 +272,7 @@ function fillSelect(id, values, allLabel){
 function buildFilters(){
   fillSelect("f-org", uniques(COLS.org).sort(), "All organizers");
   fillSelect("f-type", uniques(COLS.type).sort(), "All types");
+  fillSelect("f-event", uniques(COLS.event).sort(), "All events");
   fillSelect("f-owner", uniques(COLS.owner).sort(), "All owners");
 
   const phases = uniques(COLS.phase).sort();
@@ -283,12 +289,13 @@ function buildFilters(){
 }
 
 function filtered(){
-  const org = $("f-org").value, type = $("f-type").value, owner = $("f-owner").value;
+  const org = $("f-org").value, type = $("f-type").value, owner = $("f-owner").value, ev = $("f-event").value;
   const q = $("f-search").value.trim().toLowerCase();
   return DATA.filter(r =>
     (!org || r[COLS.org]===org) &&
     (!type || r[COLS.type]===type) &&
     (!owner || r[COLS.owner]===owner) &&
+    (!ev || r[COLS.event]===ev) &&
     (!activePhase || r[COLS.phase]===activePhase) &&
     (!q || Object.values(r).join(" ").toLowerCase().includes(q))
   );
@@ -319,6 +326,7 @@ function render(){
             <div class="task-top">
               <div class="task-name">${esc(r[COLS.task])}</div>
               <div class="badges">
+                ${r[COLS.event] && r[COLS.event]!=="Any" ? `<span class="badge event">${esc(r[COLS.event])}</span>` : ""}
                 ${r[COLS.lead] ? `<span class="badge lead">${esc(r[COLS.lead])}</span>` : ""}
                 ${r[COLS.owner] ? `<span class="badge owner">${esc(r[COLS.owner])}</span>` : ""}
               </div>
@@ -336,10 +344,10 @@ function render(){
   `).join("") || `<div class="state"><h2>No tasks match these filters</h2><p>Try resetting the filters, or add rows to the Playbook tab in the sheet.</p></div>`;
 }
 
-["f-org","f-type","f-owner"].forEach(id => $(id).addEventListener("change", render));
+["f-org","f-type","f-event","f-owner"].forEach(id => $(id).addEventListener("change", render));
 $("f-search").addEventListener("input", render);
 $("btn-reset").addEventListener("click", ()=>{
-  ["f-org","f-type","f-owner"].forEach(id => $(id).value = "");
+  ["f-org","f-type","f-event","f-owner"].forEach(id => $(id).value = "");
   $("f-search").value = "";
   activePhase = "";
   document.querySelectorAll("#phase-chips .chip").forEach(c=>c.setAttribute("aria-pressed","false"));
