@@ -28,7 +28,6 @@
 
   .wrap{max-width:1220px;margin:0 auto;padding:0 28px}
 
-  /* ---------- HOME ---------- */
   .homebar{background:var(--palemint);border-bottom:1px solid var(--silver);padding:14px 28px}
   .homebar-inner{max-width:1220px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .seg{display:flex;border:1px solid var(--silver);border-radius:8px;overflow:hidden;background:#fff}
@@ -56,15 +55,16 @@
   .ecard.webinar{border-top-color:var(--web)}
   .ecard.completed{background:#F7F7F8;border-top-color:#C9C9CC;color:var(--charcoal)}
   .ecard.completed:hover{transform:none;box-shadow:none}
-  .e-top{display:flex;gap:8px;align-items:center}
+  .e-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .e-fmt{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;border-radius:4px;padding:2px 7px;background:var(--palemint);color:var(--forest)}
   .ecard.webinar .e-fmt{background:var(--web-tint);color:var(--web)}
   .ecard.completed .e-fmt{background:var(--silver);color:var(--charcoal)}
-  .e-status{margin-left:auto;font-size:12px;font-weight:700}
+  .e-status{margin-left:auto;font-size:12px;font-weight:700;text-align:right}
   .e-status.live{color:var(--due-ink)}
   .e-status.up{color:var(--forest)}
   .ecard.webinar .e-status.up{color:var(--web)}
   .e-status.done{color:var(--charcoal)}
+  .e-status.wrap{color:var(--warn-ink)}
   .e-name{font-size:16.5px;font-weight:700;line-height:1.25}
   .e-when{font-size:12.5px;color:var(--charcoal)}
   .e-foot{display:flex;align-items:center;gap:10px;margin-top:2px}
@@ -79,7 +79,6 @@
   .ecard.webinar .e-open{color:var(--web)}
   .ecard.completed .e-open{color:var(--charcoal)}
 
-  /* ---------- EVENT DETAIL ---------- */
   .evbar{background:var(--palemint);border-bottom:1px solid var(--silver);padding:14px 28px}
   .evbar-inner{max-width:1220px;margin:0 auto}
   .backbtn{font-size:13px;font-weight:700;background:#fff;border:1px solid var(--silver);border-radius:6px;padding:7px 13px;color:var(--ink)}
@@ -88,9 +87,10 @@
   .ev-head h2{font-size:21px;font-weight:700}
   .ev-meta{font-size:13px;color:var(--charcoal)}
   .ev-count{font-size:13px;font-weight:700}
-  .ev-count.up{color:var(--forest)} .ev-count.live{color:var(--due-ink)} .ev-count.done{color:var(--charcoal)}
+  .ev-count.up{color:var(--forest)} .ev-count.live{color:var(--due-ink)} .ev-count.done{color:var(--charcoal)} .ev-count.wrap{color:var(--warn-ink)}
   .ev-progress{display:flex;align-items:center;gap:10px;margin-top:10px;max-width:430px;font-size:12px;color:var(--charcoal)}
-  .completed-note{margin-top:10px;font-size:12.5px;color:var(--charcoal);background:#fff;border:1px solid var(--silver);border-radius:6px;padding:7px 12px;display:inline-block}
+  .note{margin-top:10px;font-size:12.5px;color:var(--charcoal);background:#fff;border:1px solid var(--silver);border-radius:6px;padding:7px 12px;display:inline-block}
+  .note.wrapnote{border-color:var(--warn-edge);background:var(--warn-bg);color:var(--warn-ink)}
   .ev-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:12px}
   .field{display:flex;flex-direction:column;gap:4px}
   .field label{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--charcoal)}
@@ -143,7 +143,7 @@
 
   @media print{
     header{background:#fff;color:var(--ink);border-bottom:3px solid var(--green);padding:10px 0}
-    .hd-sub{color:var(--charcoal)} .hd-clock,.homebar,.evbar .ev-tools,.chips,.backbtn,.alerts{display:none!important}
+    .hd-sub{color:var(--charcoal)} .hd-clock,.homebar,.ev-tools,.chips,.backbtn,.alerts{display:none!important}
     .ecard:hover{box-shadow:none;transform:none}
     .detail{display:block!important}
     .row{cursor:default}
@@ -205,6 +205,7 @@ function phaseLabel(p){ return String(p||"").replace(/^\d+\s*-\s*/, ""); }
 function phaseNum(p){ const m = String(p||"").match(/^(\d+)/); return m ? m[1] : "•"; }
 function isWebinarType(t){ return /webinar/i.test(t || ""); }
 function keyOf(r){ return (r[COLS.event]||"") + "|" + (r[COLS.org]||"") + "|" + (r[COLS.task]||""); }
+function shortName(name){ const i = name.indexOf(": "); return i >= 0 ? name.slice(i+2) : name; }
 
 function parseGvizDate(v){
   if(!v) return null;
@@ -252,18 +253,25 @@ function dueDate(r){
 function eventState(name){
   const ev = EVENTS[name];
   const t = today0();
-  if(!ev){
-    return {label:"No date set", cls:"up", past:false, dated:false};
-  }
-  if((ev.status||"").toLowerCase().startsWith("complete") || (ev.end && ev.end < t) || (!ev.end && ev.start && ev.start < t))
-    return {label:"Completed", cls:"done", past:true, dated:!!ev.start};
+  if(!ev) return {label:"No date set", cls:"up", past:false, wrapup:false, dated:false};
+  if((ev.status||"").toLowerCase().startsWith("complete"))
+    return {label:"Completed", cls:"done", past:true, wrapup:false, dated:!!ev.start};
   if(ev.start && ev.start <= t && (ev.end||ev.start) >= t)
-    return {label:"LIVE NOW", cls:"live", past:false, dated:true};
+    return {label:"LIVE NOW", cls:"live", past:false, wrapup:false, dated:true};
+  if(ev.start && (ev.end||ev.start) < t)
+    return {label:"Wrap-up", cls:"wrap", past:false, wrapup:true, dated:true};
   if(ev.start){
     const d = Math.round((ev.start - t)/DAY);
-    return {label: d + " day" + (d===1?"":"s") + " to go", cls:"up", past:false, dated:true, days:d};
+    return {label: d + " day" + (d===1?"":"s") + " to go", cls:"up", past:false, wrapup:false, dated:true, days:d};
   }
-  return {label: ev.status || "Date TBC", cls:"up", past:false, dated:false};
+  return {label: ev.status || "Date TBC", cls:"up", past:false, wrapup:false, dated:false};
+}
+
+function taskRelevant(r, st){
+  /* during wrap-up only post-event tasks stay live */
+  if(!st.wrapup) return true;
+  const off = leadOffset(r[COLS.lead]);
+  return !!(off && off.kind === "rel" && off.sign > 0);
 }
 
 async function fetchTab(tab){
@@ -293,13 +301,13 @@ async function load(){
     (await fetchTab(EVENTS_TAB)).forEach(r => {
       if(r["Event"]) EVENTS[r["Event"]] = {
         start: parseGvizDate(r["Start Date"]), end: parseGvizDate(r["End Date"]),
-        location: r["Location"]||"", status: r["Status"]||"" };
+        location: r["Location"]||"", status: r["Status"]||"", series: (r["Series"]||"").trim() };
     });
   }catch(e){ /* Events tab optional */ }
   route();
 }
 
-/* ---------- model helpers ---------- */
+/* ---------- model ---------- */
 function eventList(){
   const names = new Set(Object.keys(EVENTS));
   DATA.forEach(r => { if(r[COLS.event] && r[COLS.event] !== "Any") names.add(r[COLS.event]); });
@@ -314,6 +322,12 @@ function templateGroups(){
   });
   return g;
 }
+function seriesOf(name){ return (EVENTS[name] && EVENTS[name].series) || ""; }
+function seriesMap(){
+  const m = {};
+  eventList().forEach(n => { const s = seriesOf(n); if(s) (m[s] ??= []).push(n); });
+  return m;
+}
 function evFormat(rows){ return rows.some(r => isWebinarType(r[COLS.type])) ? "webinar" : "event"; }
 function progress(rows){
   const total = rows.length;
@@ -325,112 +339,184 @@ function dueStats(name, rows){
   let over = 0, soon = 0;
   if(st.past) return {over, soon};
   rows.forEach(r => {
-    if(DONE[keyOf(r)]) return;
+    if(DONE[keyOf(r)] || !taskRelevant(r, st)) return;
     const d = dueDate(r); if(!d) return;
     const diff = Math.round((d - t)/DAY);
     if(diff < 0) over++; else if(diff <= 7) soon++;
   });
   return {over, soon};
 }
+function rankState(st){ return st.cls==="live" ? 0 : (!st.past && !st.wrapup) ? 1 : st.wrapup ? 2 : 3; }
 
 /* ---------- routing ---------- */
 function goHome(){ location.hash = ""; }
 function goEvent(name){ location.hash = "ev=" + encodeURIComponent(name); }
+function goSeries(name){ location.hash = "series=" + encodeURIComponent(name); }
 function goTpl(key){ location.hash = "tpl=" + encodeURIComponent(key); }
 function route(){
   evOwner = ""; evQuery = ""; evPhase = "";
   const h = location.hash.replace(/^#/, "");
   if(h.startsWith("ev=")) renderEvent(decodeURIComponent(h.slice(3)), false);
   else if(h.startsWith("tpl=")) renderEvent(decodeURIComponent(h.slice(4)), true);
+  else if(h.startsWith("series=")) renderSeries(decodeURIComponent(h.slice(7)));
   else renderHome();
   window.scrollTo(0,0);
 }
 window.addEventListener("hashchange", route);
 $("home-link").addEventListener("click", goHome);
 
-/* ---------- HOME ---------- */
-function renderHome(){
-  const app = $("app");
-  const evs = eventList();
-  const tpls = templateGroups();
+/* ---------- shared card builders ---------- */
+function eventCard(name){
+  const rows = rowsForEvent(name);
+  const f = evFormat(rows);
+  const st = eventState(name);
+  const ev = EVENTS[name] || {};
+  const pr = progress(rows);
+  const ds = dueStats(name, rows);
+  const when = ev.start ? (fmtDateY(ev.start) + (ev.end && +ev.end !== +ev.start ? " to " + fmtDateY(ev.end) : "")) : "Date not set";
+  return `<div class="ecard ${f==='webinar'?'webinar':''} ${st.past?'completed':''}" data-ev="${esc(name)}" role="button" tabindex="0">
+    <div class="e-top">
+      <span class="e-fmt">${f==='webinar' ? 'Webinar' : 'In-Person Event'}</span>
+      <span class="e-status ${st.cls}">${esc(st.label)}</span>
+    </div>
+    <div class="e-name">${esc(name)}</div>
+    <div class="e-when">${esc(when)}${ev.location ? " • " + esc(ev.location) : ""}</div>
+    <div class="e-foot">
+      <span class="e-prog">${pr.done}/${pr.total} done</span>
+      <span class="bar"><i style="width:${pr.pct}%"></i></span>
+      ${ds.over ? `<span class="e-alert">${ds.over} overdue</span>` : ds.soon ? `<span class="e-soon">${ds.soon} due soon</span>` : ""}
+    </div>
+    <div class="e-open">${st.past ? "View record" : "Open checklist"} &rsaquo;</div>
+  </div>`;
+}
 
-  /* alerts across all upcoming events */
+function seriesCard(sname, members){
+  const allRows = members.flatMap(rowsForEvent);
+  const f = evFormat(allRows);
+  const pr = progress(allRows);
+  let over = 0, soon = 0, completedN = 0;
+  members.forEach(n => {
+    const ds = dueStats(n, rowsForEvent(n));
+    over += ds.over; soon += ds.soon;
+    if(eventState(n).past) completedN++;
+  });
+  const t = today0();
+  const upcoming = members.filter(n => { const e = EVENTS[n]; const st = eventState(n); return e && e.start && !st.past && !st.wrapup && e.start >= t; })
+    .sort((a,b)=>EVENTS[a].start - EVENTS[b].start);
+  const live = members.find(n => eventState(n).cls === "live");
+  let statusHTML, cls;
+  if(live){ statusHTML = "LIVE: " + esc(shortName(live)); cls = "live"; }
+  else if(upcoming.length){
+    const n = upcoming[0]; const d = Math.round((EVENTS[n].start - t)/DAY);
+    statusHTML = "Next: " + esc(shortName(n)) + " • in " + d + "d"; cls = "up";
+  } else if(completedN < members.length){ statusHTML = "Wrap-up"; cls = "wrap"; }
+  else { statusHTML = "Completed"; cls = "done"; }
+  const dates = members.map(n=>EVENTS[n]&&EVENTS[n].start).filter(Boolean).sort((a,b)=>a-b);
+  const span = dates.length ? fmtDate(dates[0]) + " to " + fmtDateY(dates[dates.length-1]) : "";
+  return `<div class="ecard ${f==='webinar'?'webinar':''} ${cls==='done'?'completed':''}" data-series="${esc(sname)}" role="button" tabindex="0">
+    <div class="e-top">
+      <span class="e-fmt">${f==='webinar' ? 'Webinar Series' : 'Event Series'}</span>
+      <span class="e-status ${cls}">${statusHTML}</span>
+    </div>
+    <div class="e-name">${esc(sname)}</div>
+    <div class="e-when">${members.length} webinars${span ? " • " + esc(span) : ""} • ${completedN} completed</div>
+    <div class="e-foot">
+      <span class="e-prog">${pr.done}/${pr.total} done</span>
+      <span class="bar"><i style="width:${pr.pct}%"></i></span>
+      ${over ? `<span class="e-alert">${over} overdue</span>` : soon ? `<span class="e-soon">${soon} due soon</span>` : ""}
+    </div>
+    <div class="e-open">Open series &rsaquo;</div>
+  </div>`;
+}
+
+function wireCards(scope){
+  scope.querySelectorAll(".ecard[data-ev]").forEach(c=>{
+    const open = ()=>goEvent(c.dataset.ev);
+    c.addEventListener("click", open);
+    c.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" ") {e.preventDefault(); open();} });
+  });
+  scope.querySelectorAll(".ecard[data-series]").forEach(c=>{
+    const open = ()=>goSeries(c.dataset.series);
+    c.addEventListener("click", open);
+    c.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" ") {e.preventDefault(); open();} });
+  });
+  scope.querySelectorAll(".ecard[data-tpl]").forEach(c=>{
+    const open = ()=>goTpl(c.dataset.tpl);
+    c.addEventListener("click", open);
+    c.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" ") {e.preventDefault(); open();} });
+  });
+  scope.querySelectorAll(".alert-item").forEach(a=>{
+    a.addEventListener("click", ()=>goEvent(a.dataset.ev));
+  });
+}
+
+function alertsHTML(eventNames){
   const t = today0(); const items = [];
-  evs.forEach(name => {
+  eventNames.forEach(name => {
     const st = eventState(name); if(st.past) return;
     rowsForEvent(name).forEach(r => {
-      if(DONE[keyOf(r)]) return;
+      if(DONE[keyOf(r)] || !taskRelevant(r, st)) return;
       const d = dueDate(r); if(!d) return;
       const diff = Math.round((d - t)/DAY);
       if(diff <= 7) items.push({name, r, d, diff});
     });
   });
   items.sort((a,b)=>a.d-b.d);
-  const alertsHTML = items.length ? `<div class="alerts">
+  if(!items.length) return "";
+  return `<div class="alerts">
     <h3>Needs attention • next 7 days${items.length>8 ? " (showing 8 of "+items.length+")" : ""}</h3>` +
     items.slice(0,8).map(({name,r,d,diff}) => `<div class="alert-item" data-ev="${esc(name)}">
       <span class="when ${diff<0?'over':'soon'}">${diff<0 ? "OVERDUE • was "+fmtDate(d) : diff===0 ? "DUE TODAY" : "Due in "+diff+"d • "+fmtDate(d)}</span>
       <span class="a-task">${esc(r[COLS.task])}</span>
       <span class="ev">${esc(name)} • ${esc(r[COLS.owner]||"")}</span>
-    </div>`).join("") + `</div>` : "";
+    </div>`).join("") + `</div>`;
+}
 
-  /* event cards */
-  const sorted = evs.sort((a,b)=>{
-    const sa = eventState(a), sb = eventState(b);
-    const rank = s => s.cls==="live" ? 0 : !s.past ? 1 : 2;
-    if(rank(sa) !== rank(sb)) return rank(sa) - rank(sb);
-    const ea = EVENTS[a], eb = EVENTS[b];
-    if(ea?.start && eb?.start) return ea.start - eb.start;
-    return a.localeCompare(b);
+/* ---------- HOME ---------- */
+function renderHome(){
+  const app = $("app");
+  const smap = seriesMap();
+  const standalone = eventList().filter(n => !seriesOf(n));
+  const tpls = templateGroups();
+
+  const entries = [];
+  standalone.forEach(n => {
+    const st = eventState(n);
+    const d = EVENTS[n] && EVENTS[n].start ? EVENTS[n].start : null;
+    entries.push({kind:"ev", key:n, rank: rankState(st), date: d, fmt: evFormat(rowsForEvent(n))});
   });
-  const visible = sorted.filter(name => {
-    if(!fmt) return true;
-    const f = evFormat(rowsForEvent(name));
-    return fmt === f || (fmt==="event" && f==="event");
+  Object.entries(smap).forEach(([s, members]) => {
+    const t = today0();
+    const up = members.map(n=>EVENTS[n]&&EVENTS[n].start).filter(d=>d&&d>=t).sort((a,b)=>a-b);
+    const ranks = members.map(n=>rankState(eventState(n)));
+    entries.push({kind:"series", key:s, rank: Math.min(...ranks), date: up[0]||null, fmt: evFormat(members.flatMap(rowsForEvent))});
   });
+  entries.sort((a,b)=>{
+    if(a.rank !== b.rank) return a.rank - b.rank;
+    if(a.date && b.date) return a.date - b.date;
+    if(a.date) return -1; if(b.date) return 1;
+    return a.key.localeCompare(b.key);
+  });
+  const visible = entries.filter(e => !fmt || e.fmt === fmt);
 
-  const cardsHTML = visible.map(name => {
-    const rows = rowsForEvent(name);
-    const f = evFormat(rows);
-    const st = eventState(name);
-    const ev = EVENTS[name] || {};
-    const pr = progress(rows);
-    const ds = dueStats(name, rows);
-    const when = ev.start ? (fmtDateY(ev.start) + (ev.end && +ev.end !== +ev.start ? " to " + fmtDateY(ev.end) : "")) : "Date not set";
-    return `<div class="ecard ${f==='webinar'?'webinar':''} ${st.past?'completed':''}" data-ev="${esc(name)}" role="button" tabindex="0">
-      <div class="e-top">
-        <span class="e-fmt">${f==='webinar' ? 'Webinar' : 'In-Person Event'}</span>
-        <span class="e-status ${st.cls}">${esc(st.label)}</span>
-      </div>
-      <div class="e-name">${esc(name)}</div>
-      <div class="e-when">${esc(when)}${ev.location ? " • " + esc(ev.location) : ""}</div>
-      <div class="e-foot">
-        <span class="e-prog">${pr.done}/${pr.total} done</span>
-        <span class="bar"><i style="width:${pr.pct}%"></i></span>
-        ${ds.over ? `<span class="e-alert">${ds.over} overdue</span>` : ds.soon ? `<span class="e-soon">${ds.soon} due soon</span>` : ""}
-      </div>
-      <div class="e-open">${st.past ? "View record" : "Open checklist"} &rsaquo;</div>
-    </div>`;
-  }).join("");
+  const cardsHTML = visible.map(e => e.kind === "series" ? seriesCard(e.key, smap[e.key]) : eventCard(e.key)).join("");
 
-  /* template cards */
   const tplKeys = Object.keys(tpls).filter(k => {
     if(!fmt) return true;
-    const type = k.split("|")[1];
-    return fmt === (isWebinarType(type) ? "webinar" : "event");
+    return fmt === (isWebinarType(k.split("|")[1]) ? "webinar" : "event");
   }).sort();
   const tplHTML = tplKeys.map(k => {
     const [org, type] = k.split("|");
-    const rows = tpls[k];
     const f = isWebinarType(type) ? "webinar" : "event";
     return `<div class="ecard ${f==='webinar'?'webinar':''}" data-tpl="${esc(k)}" role="button" tabindex="0">
       <div class="e-top"><span class="e-fmt">${f==='webinar' ? 'Webinar' : 'In-Person Event'} • Template</span></div>
       <div class="e-name">${esc(type)}</div>
-      <div class="e-when">${esc(org)} • reusable playbook • ${rows.length} tasks</div>
+      <div class="e-when">${esc(org)} • reusable playbook • ${tpls[k].length} tasks</div>
       <div class="e-open">Open playbook &rsaquo;</div>
     </div>`;
   }).join("");
 
+  const allEventNames = eventList();
   app.innerHTML = `
     <div class="homebar"><div class="homebar-inner">
       <div class="seg" role="group" aria-label="Format">
@@ -441,7 +527,7 @@ function renderHome(){
       <span class="legend"><span class="le">In-person event</span><span class="lw">Webinar</span></span>
     </div></div>
     <div class="wrap">
-      ${alertsHTML}
+      ${alertsHTML(allEventNames)}
       <div class="sect"><h2>Engagements</h2><div class="cards">${cardsHTML || "<p style='font-size:13px;color:var(--charcoal)'>No engagements in this view.</p>"}</div></div>
       ${tplHTML ? `<div class="sect"><h2>Evergreen playbooks (apply to any event)</h2><div class="cards">${tplHTML}</div></div>` : ""}
     </div>`;
@@ -449,25 +535,46 @@ function renderHome(){
   app.querySelectorAll(".homebar .seg button").forEach(b=>{
     b.addEventListener("click", ()=>{ fmt = b.dataset.fmt; renderHome(); });
   });
-  app.querySelectorAll(".ecard[data-ev]").forEach(c=>{
-    const open = ()=>goEvent(c.dataset.ev);
-    c.addEventListener("click", open);
-    c.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" ") {e.preventDefault(); open();} });
+  wireCards(app);
+}
+
+/* ---------- SERIES ---------- */
+function renderSeries(sname){
+  const app = $("app");
+  const members = (seriesMap()[sname] || []).sort((a,b)=>{
+    const ea = EVENTS[a], eb = EVENTS[b];
+    if(ea?.start && eb?.start) return ea.start - eb.start;
+    return a.localeCompare(b);
   });
-  app.querySelectorAll(".ecard[data-tpl]").forEach(c=>{
-    const open = ()=>goTpl(c.dataset.tpl);
-    c.addEventListener("click", open);
-    c.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" ") {e.preventDefault(); open();} });
-  });
-  app.querySelectorAll(".alert-item").forEach(a=>{
-    a.addEventListener("click", ()=>goEvent(a.dataset.ev));
-  });
+  if(!members.length){
+    app.innerHTML = `<div class="wrap"><div class="state"><h2>No webinars found in this series</h2><p>Add rows to the <code>Events</code> tab with Series set to "${esc(sname)}".</p><p style="margin-top:10px"><button class="backbtn" onclick="location.hash=''">&lsaquo; All engagements</button></p></div></div>`;
+    return;
+  }
+  const allRows = members.flatMap(rowsForEvent);
+  const pr = progress(allRows);
+  const f = evFormat(allRows);
+  app.innerHTML = `
+    <div class="evbar"><div class="evbar-inner">
+      <button class="backbtn" id="back">&lsaquo; All engagements</button>
+      <div class="ev-head">
+        <h2>${esc(sname)}</h2>
+        <span class="ev-meta">${members.length} webinars • paid HPA Pulse program</span>
+      </div>
+      <div class="ev-progress">${pr.done}/${pr.total} done across the series<span class="bar"><i style="width:${pr.pct}%"></i></span>${pr.pct}%</div>
+    </div></div>
+    <div class="wrap">
+      ${alertsHTML(members)}
+      <div class="sect"><h2>Webinars in this series</h2><div class="cards">${members.map(eventCard).join("")}</div></div>
+    </div>`;
+  $("back").addEventListener("click", goHome);
+  wireCards(app);
 }
 
 /* ---------- EVENT DETAIL ---------- */
-function dueChip(r, past){
+function dueChip(r, st){
   const lead = humanLead(r[COLS.lead]);
-  if(past) return lead ? `<span class="t-due past">${esc(lead)}</span>` : "";
+  if(st.past) return lead ? `<span class="t-due past">${esc(lead)}</span>` : "";
+  if(st.wrapup && !taskRelevant(r, st)) return `<span class="t-due past">Pre-event (closed)</span>`;
   const due = dueDate(r);
   if(!due) return lead ? `<span class="t-due plain">${esc(lead)}</span>` : "";
   const t = today0(); const diff = Math.round((due - t)/DAY);
@@ -480,14 +587,14 @@ function dueChip(r, past){
 
 function renderEvent(name, isTpl){
   const app = $("app");
-  let rows, title, sub, st, f;
+  let rows, title, sub, st, f, backTo = null;
   if(isTpl){
     const all = templateGroups();
     rows = all[name] || [];
-    const [org, type] = name.split("|");
-    title = type; sub = org + " • reusable playbook";
-    st = {label:"Template", cls:"up", past:false, dated:false};
-    f = isWebinarType(type) ? "webinar" : "event";
+    const parts = name.split("|");
+    title = parts[1] || name; sub = (parts[0]||"") + " • reusable playbook";
+    st = {label:"Template", cls:"up", past:false, wrapup:false, dated:false};
+    f = isWebinarType(parts[1]) ? "webinar" : "event";
   } else {
     rows = rowsForEvent(name);
     title = name;
@@ -495,9 +602,10 @@ function renderEvent(name, isTpl){
     st = eventState(name);
     sub = (ev.start ? fmtDateY(ev.start) + (ev.end && +ev.end !== +ev.start ? " to " + fmtDateY(ev.end) : "") : "Date not set") + (ev.location ? " • " + ev.location : "");
     f = evFormat(rows);
+    backTo = seriesOf(name) || null;
   }
   if(!rows.length){
-    app.innerHTML = `<div class="wrap"><div class="state"><h2>No tasks found for this engagement</h2><p>Add rows to the <code>Playbook</code> tab with Event set to "${esc(isTpl?name.split("|")[0]:name)}".</p><p style="margin-top:10px"><button class="backbtn" onclick="location.hash=''">&lsaquo; All engagements</button></p></div></div>`;
+    app.innerHTML = `<div class="wrap"><div class="state"><h2>No tasks found for this engagement</h2><p>Add rows to the <code>Playbook</code> tab with Event set to "${esc(name)}".</p><p style="margin-top:10px"><button class="backbtn" onclick="location.hash=''">&lsaquo; All engagements</button></p></div></div>`;
     return;
   }
 
@@ -521,15 +629,16 @@ function renderEvent(name, isTpl){
       <span class="phase-prog">${d}/${g.length}<span class="bar"><i style="width:${g.length?Math.round(100*d/g.length):0}%"></i></span></span></div>
       <div class="grid">` + g.map(r => {
         const k = keyOf(r), done = !!DONE[k];
+        const locked = st.past || (st.wrapup && !taskRelevant(r, st));
         const id = "d_" + Math.random().toString(36).slice(2,9);
-        return `<div class="row ${f==='webinar'?'webinar':''} ${done?'done':''} ${st.past?'past':''}" data-detail="${id}">
-          ${st.past ? "" : `<input type="checkbox" data-key="${esc(k)}" ${done?'checked':''} aria-label="Mark done">`}
+        return `<div class="row ${f==='webinar'?'webinar':''} ${done?'done':''} ${locked?'past':''}" data-detail="${id}">
+          ${locked ? "" : `<input type="checkbox" data-key="${esc(k)}" ${done?'checked':''} aria-label="Mark done">`}
           <span class="t-name">${esc(r[COLS.task])}</span>
           ${r[COLS.gotcha] ? '<span class="t-gflag" title="Has a gotcha">&#9888;</span>' : ''}
-          ${dueChip(r, st.past)}
+          ${dueChip(r, st)}
           ${r[COLS.owner] ? `<span class="t-owner">${esc(r[COLS.owner])}</span>` : ""}
         </div>
-        <div class="detail ${f==='webinar'?'webinar':''} ${st.past?'past':''}" id="${id}">
+        <div class="detail ${f==='webinar'?'webinar':''} ${locked?'past':''}" id="${id}">
           ${r[COLS.req] ? `<div>${esc(r[COLS.req])}</div>` : ""}
           <div style="margin-top:6px">
             ${r[COLS.lead] ? `<b>Timing:</b> ${esc(humanLead(r[COLS.lead]))} &nbsp; ` : ""}
@@ -541,16 +650,21 @@ function renderEvent(name, isTpl){
       }).join("") + `</div></section>`;
   }).join("") || `<div class="state"><h2>No tasks match these filters</h2></div>`;
 
+  const noteHTML = st.past
+    ? `<div class="note">This engagement is completed. The checklist below is the read-only record.</div>`
+    : st.wrapup
+    ? `<div class="note wrapnote">Event date has passed. Close-out tasks below stay open; pre-event tasks are closed. Type "Completed" in the Events tab Status column to lock this record.</div>`
+    : "";
+
   app.innerHTML = `
     <div class="evbar"><div class="evbar-inner">
-      <button class="backbtn" id="back">&lsaquo; All engagements</button>
+      <button class="backbtn" id="back">&lsaquo; ${backTo ? esc(backTo) : "All engagements"}</button>
       <div class="ev-head">
         <h2>${esc(title)}</h2>
         <span class="ev-count ${st.cls}">${esc(st.label)}</span>
         <span class="ev-meta">${esc(sub)}</span>
       </div>
-      ${st.past ? `<div class="completed-note">This engagement is completed. The checklist below is the read-only record.</div>` :
-      `<div class="ev-progress">${pr.done}/${pr.total} done<span class="bar"><i style="width:${pr.pct}%"></i></span>${pr.pct}%</div>`}
+      ${st.past ? noteHTML : `<div class="ev-progress">${pr.done}/${pr.total} done<span class="bar"><i style="width:${pr.pct}%"></i></span>${pr.pct}%</div>${noteHTML}`}
       <div class="ev-tools">
         <div class="field"><label for="e-owner">Owner</label><select id="e-owner"><option value="">All owners</option>${owners.map(o=>`<option ${o===evOwner?'selected':''}>${esc(o)}</option>`).join("")}</select></div>
         <div class="field"><label for="e-search">Search</label><input type="search" id="e-search" value="${esc(evQuery)}" placeholder="Task, contact, requirement"></div>
@@ -560,7 +674,7 @@ function renderEvent(name, isTpl){
     </div></div>
     <div class="wrap">${boardHTML}</div>`;
 
-  $("back").addEventListener("click", goHome);
+  $("back").addEventListener("click", ()=>{ backTo ? goSeries(backTo) : goHome(); });
   $("btn-print").addEventListener("click", ()=>window.print());
   $("e-owner").addEventListener("change", e=>{ evOwner = e.target.value; renderEvent(name, isTpl); });
   $("e-search").addEventListener("input", e=>{ evQuery = e.target.value.trim().toLowerCase(); renderEvent(name, isTpl); });
