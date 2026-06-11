@@ -7,142 +7,123 @@
 <title>Engagement Playbook | Simplify Group</title>
 <style>
   :root{
-    --ink:#221F20;          /* Near Black */
-    --green:#2D8C4E;        /* Arrow Green */
-    --forest:#1B6B38;
-    --leaf:#5BB574;
-    --mint:#A8DDB5;
-    --palemint:#DFF2E3;
-    --charcoal:#4A4547;
-    --silver:#EAEAEB;
-    --warn-bg:#FFF6E0;
-    --warn-ink:#8A5A00;
-    --warn-edge:#E3B23C;
+    --ink:#221F20; --green:#2D8C4E; --forest:#1B6B38; --leaf:#5BB574;
+    --mint:#A8DDB5; --palemint:#DFF2E3; --charcoal:#4A4547; --silver:#EAEAEB;
+    --warn-bg:#FFF6E0; --warn-ink:#8A5A00; --warn-edge:#E3B23C;
+    --due-bg:#FDECEA; --due-ink:#9B2C1F; --due-edge:#D9534F;
+    --web:#105299; --web-tint:#E7F0FA; --web-border:#B9D2EC;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important;animation:none!important} }
-  body{
-    font-family:"Proxima Nova", Arial, Helvetica, sans-serif;
-    color:var(--ink);
-    background:#FFFFFF;
-    line-height:1.45;
-  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+  body{font-family:"Proxima Nova", Arial, Helvetica, sans-serif;color:var(--ink);background:#fff;line-height:1.45}
   a{color:var(--forest)}
+  button{font-family:inherit;cursor:pointer}
 
-  /* ---------- Header ---------- */
-  header{
-    background:var(--ink);
-    color:#fff;
-    padding:22px 28px 20px;
-  }
-  .hd-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;max-width:1180px;margin:0 auto}
-  .hd-mark{
-    display:inline-block;width:12px;height:12px;background:var(--green);
-    transform:rotate(45deg);flex:none;position:relative;top:-1px;
-  }
-  h1{font-size:21px;font-weight:700;letter-spacing:.2px}
-  .hd-sub{color:var(--mint);font-size:13px;font-weight:400}
-  .hd-right{margin-left:auto;font-size:12px;color:var(--silver)}
+  header{background:var(--ink);color:#fff;padding:16px 28px}
+  .hd-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;max-width:1220px;margin:0 auto}
+  .hd-mark{width:12px;height:12px;background:var(--green);transform:rotate(45deg);flex:none}
+  h1{font-size:20px;font-weight:700}
+  .hd-sub{color:var(--mint);font-size:12.5px}
+  .hd-clock{margin-left:auto;text-align:right;font-size:12px;color:var(--silver);line-height:1.35}
+  .hd-clock b{display:block;font-size:15px;color:#fff;font-variant-numeric:tabular-nums}
 
-  /* ---------- Controls ---------- */
-  .controls{
-    background:var(--palemint);
-    border-bottom:1px solid var(--silver);
-    padding:16px 28px;
-  }
-  .controls-inner{max-width:1180px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .controls{background:var(--palemint);border-bottom:1px solid var(--silver);padding:14px 28px}
+  .controls-inner{max-width:1220px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
   .field{display:flex;flex-direction:column;gap:4px}
-  .field label{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--charcoal)}
-  select, input[type=search]{
-    font-family:inherit;font-size:14px;color:var(--ink);
-    background:#fff;border:1px solid var(--silver);border-radius:6px;
-    padding:8px 10px;min-width:180px;
-  }
-  select:focus, input:focus, button:focus{outline:2px solid var(--green);outline-offset:1px}
-  input[type=search]{min-width:220px}
-  .btn{
-    font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;
-    background:var(--green);color:#fff;border:none;border-radius:6px;padding:9px 16px;
-  }
+  .field label{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--charcoal)}
+  select,input[type=search]{font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid var(--silver);border-radius:6px;padding:8px 10px;min-width:170px;max-width:330px}
+  select:focus,input:focus,button:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+  .seg{display:flex;border:1px solid var(--silver);border-radius:8px;overflow:hidden;background:#fff}
+  .seg button{font-size:12.5px;font-weight:700;padding:8px 13px;border:none;background:#fff;color:var(--charcoal)}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .seg button.w[aria-pressed="true"]{background:var(--web)}
+  .btn{font-size:12.5px;font-weight:700;background:var(--green);color:#fff;border:none;border-radius:6px;padding:9px 14px}
   .btn:hover{background:var(--forest)}
   .btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--silver)}
-  .btn.secondary:hover{border-color:var(--green);color:var(--forest)}
 
-  /* phase chips */
-  .chips{max-width:1180px;margin:10px auto 0;display:flex;gap:6px;flex-wrap:wrap}
-  .chip{
-    font-size:12px;font-weight:600;border:1px solid var(--silver);border-radius:999px;
-    background:#fff;color:var(--charcoal);padding:5px 12px;cursor:pointer;
-  }
+  .chips{max-width:1220px;margin:10px auto 0;display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11.5px;font-weight:600;border:1px solid var(--silver);border-radius:999px;background:#fff;color:var(--charcoal);padding:4px 11px}
   .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 
-  /* ---------- Summary strip ---------- */
-  .summary{
-    max-width:1180px;margin:18px auto 0;padding:0 28px;
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--charcoal);
-  }
-  .summary .pill{background:var(--palemint);border:1px solid var(--mint);border-radius:999px;padding:4px 12px;font-weight:600;color:var(--forest)}
+  .wrap{max-width:1220px;margin:0 auto;padding:0 28px}
+
+  /* due-soon strip */
+  .alerts{margin-top:16px;border:1px solid var(--warn-edge);border-left:5px solid var(--warn-edge);background:var(--warn-bg);border-radius:8px;padding:12px 16px}
+  .alerts h3{font-size:13px;color:var(--warn-ink);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
+  .alert-item{display:flex;gap:10px;align-items:baseline;font-size:13px;padding:3px 0;flex-wrap:wrap}
+  .alert-item .when{font-weight:700;white-space:nowrap}
+  .alert-item .when.over{color:var(--due-ink)}
+  .alert-item .when.soon{color:var(--warn-ink)}
+  .alert-item .ev{color:var(--charcoal);font-size:12px}
+
+  .summary{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--charcoal)}
+  .summary .pill{background:var(--palemint);border:1px solid var(--mint);border-radius:999px;padding:3px 11px;font-weight:600;color:var(--forest)}
   .summary .count{font-weight:700;color:var(--ink)}
+  .legend{margin-left:auto;display:flex;gap:12px;font-size:11.5px}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .legend .le::before{background:var(--green)} .legend .lw::before{background:var(--web)}
 
-  /* ---------- Phase sections ---------- */
-  main{max-width:1180px;margin:8px auto 80px;padding:0 28px}
-  .phase{margin-top:30px}
-  .phase-h{
-    display:flex;align-items:center;gap:10px;margin-bottom:4px;
-  }
-  .phase-num{
-    flex:none;width:26px;height:26px;border-radius:50%;
-    background:var(--green);color:#fff;font-size:13px;font-weight:700;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .phase-h h2{font-size:16px;font-weight:700;letter-spacing:.2px}
-  .phase-body{border-left:3px solid var(--mint);margin-left:12px;padding:8px 0 4px 22px}
+  .phase{margin-top:26px}
+  .phase-h{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .phase-num{flex:none;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .phase-h h2{font-size:15px;font-weight:700}
+  .phase-prog{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--charcoal)}
+  .bar{width:120px;height:6px;border-radius:3px;background:var(--silver);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--green)}
 
-  /* task card */
-  .task{
-    border:1px solid var(--silver);border-radius:8px;background:#fff;
-    padding:14px 16px;margin-bottom:10px;page-break-inside:avoid;
-  }
+  /* GRID VIEW */
+  .grid{border:1px solid var(--silver);border-radius:8px;overflow:hidden}
+  .row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-top:1px solid var(--silver);background:#fff;border-left:4px solid var(--green)}
+  .row:first-child{border-top:none}
+  .row.webinar{border-left-color:var(--web)}
+  .row.done .t-name{text-decoration:line-through;color:var(--charcoal)}
+  .row.clickable{cursor:pointer}
+  .row input[type=checkbox]{width:16px;height:16px;accent-color:var(--green);flex:none;cursor:pointer}
+  .row.webinar input[type=checkbox]{accent-color:var(--web)}
+  .t-name{font-size:13.5px;font-weight:600;flex:1 1 280px;min-width:200px}
+  .t-due{font-size:11.5px;font-weight:700;white-space:nowrap;border-radius:5px;padding:3px 8px;background:var(--ink);color:#fff;font-variant-numeric:tabular-nums}
+  .t-due.soon{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-edge)}
+  .t-due.over{background:var(--due-bg);color:var(--due-ink);border:1px solid var(--due-edge)}
+  .t-due.past{background:var(--silver);color:var(--charcoal)}
+  .t-owner{font-size:11px;font-weight:700;border-radius:5px;padding:3px 8px;background:var(--palemint);color:var(--forest);border:1px solid var(--mint);white-space:nowrap}
+  .row.webinar .t-owner{background:var(--web-tint);color:var(--web);border-color:var(--web-border)}
+  .t-gflag{flex:none;font-size:12px;color:var(--warn-ink)}
+  .detail{display:none;background:#FBFBFB;border-top:1px dashed var(--silver);padding:10px 16px 12px 42px;font-size:12.5px;color:var(--charcoal);border-left:4px solid var(--green)}
+  .detail.webinar{border-left-color:var(--web)}
+  .detail.open{display:block}
+  .detail b{color:var(--ink)}
+  .detail .gotcha{margin-top:8px;background:var(--warn-bg);border-left:3px solid var(--warn-edge);color:var(--warn-ink);padding:7px 11px;border-radius:0 6px 6px 0}
+
+  /* CARD VIEW */
+  .task{border:1px solid var(--silver);border-left:4px solid var(--green);border-radius:8px;background:#fff;padding:13px 15px;margin-bottom:10px;page-break-inside:avoid}
+  .task.webinar{border-left-color:var(--web)}
   .task-top{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
-  .task-name{font-size:15px;font-weight:700;flex:1 1 320px}
+  .task-name{font-size:14.5px;font-weight:700;flex:1 1 300px}
   .badges{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-  .badge{font-size:11px;font-weight:700;border-radius:5px;padding:3px 8px;white-space:nowrap}
-  .badge.lead{background:var(--ink);color:#fff}
-  .badge.owner{background:var(--palemint);color:var(--forest);border:1px solid var(--mint)}
-  .badge.event{background:#fff;color:var(--charcoal);border:1px solid var(--silver)}
-  .task-req{font-size:13.5px;color:var(--charcoal);margin-top:8px}
-  .task-meta{font-size:12.5px;color:var(--charcoal);margin-top:8px;display:flex;gap:18px;flex-wrap:wrap}
-  .task-meta b{color:var(--ink);font-weight:700}
-  .gotcha{
-    margin-top:10px;background:var(--warn-bg);border-left:3px solid var(--warn-edge);
-    color:var(--warn-ink);font-size:13px;padding:8px 12px;border-radius:0 6px 6px 0;
-  }
-  .gotcha b{letter-spacing:.4px}
+  .task-req{font-size:13px;color:var(--charcoal);margin-top:7px}
+  .task-meta{font-size:12px;color:var(--charcoal);margin-top:7px;display:flex;gap:16px;flex-wrap:wrap}
+  .task-meta b{color:var(--ink)}
+  .gotcha{margin-top:9px;background:var(--warn-bg);border-left:3px solid var(--warn-edge);color:var(--warn-ink);font-size:12.5px;padding:7px 11px;border-radius:0 6px 6px 0}
 
-  /* ---------- States ---------- */
-  .state{max-width:760px;margin:60px auto;padding:0 28px;font-size:14.5px;color:var(--charcoal)}
+  .state{max-width:760px;margin:60px auto;padding:0 28px;font-size:14px;color:var(--charcoal)}
   .state h2{font-size:18px;color:var(--ink);margin-bottom:10px}
-  .state code{background:var(--palemint);padding:2px 6px;border-radius:4px;font-size:13px}
-  .state ol{margin:12px 0 0 20px}
-  .state li{margin-bottom:6px}
+  .state code{background:var(--palemint);padding:2px 6px;border-radius:4px;font-size:12.5px}
   .hidden{display:none}
+  .hint{font-size:11.5px;color:var(--charcoal);margin-top:8px}
+  footer{height:80px}
 
-  /* ---------- Print ---------- */
   @media print{
-    header{padding:14px 0;background:#fff;color:var(--ink);border-bottom:3px solid var(--green)}
-    .hd-sub{color:var(--charcoal)} .hd-right{display:none}
-    .controls,.chips,.btn{display:none!important}
-    .summary{margin-top:6px}
-    main{margin-bottom:20px}
-    .task{border-color:#bbb}
-    .badge.lead{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+    header{background:#fff;color:var(--ink);border-bottom:3px solid var(--green);padding:10px 0}
+    .hd-sub{color:var(--charcoal)} .hd-clock{display:none}
+    .controls,.chips,.btn,.alerts,.legend{display:none!important}
+    .row input[type=checkbox]{accent-color:#888}
   }
-  @media (max-width:640px){
-    header,.controls,main{padding-left:16px;padding-right:16px}
-    .summary{padding:0 16px}
-    select,input[type=search]{min-width:100%;width:100%}
+  @media (max-width:680px){
+    header,.controls{padding-left:16px;padding-right:16px}
+    .wrap{padding:0 16px}
+    select,input[type=search]{min-width:100%;width:100%;max-width:none}
     .field{width:100%}
+    .t-name{min-width:120px}
   }
 </style>
 </head>
@@ -153,132 +134,193 @@
     <span class="hd-mark" aria-hidden="true"></span>
     <h1>Engagement Playbook</h1>
     <span class="hd-sub">Every task, deadline and gotcha for each partner engagement</span>
-    <span class="hd-right" id="last-loaded"></span>
+    <div class="hd-clock"><b id="clock">--:--:--</b><span id="today"></span></div>
   </div>
 </header>
 
 <div class="controls" id="controls">
   <div class="controls-inner">
-    <div class="field">
-      <label for="f-org">Organizer</label>
-      <select id="f-org"></select>
+    <div class="seg" id="format-seg" role="group" aria-label="Format">
+      <button type="button" data-fmt="" aria-pressed="true">All</button>
+      <button type="button" data-fmt="event" aria-pressed="false">In-Person Events</button>
+      <button type="button" class="w" data-fmt="webinar" aria-pressed="false">Webinars</button>
     </div>
-    <div class="field">
-      <label for="f-type">Engagement type</label>
-      <select id="f-type"></select>
+    <div class="field"><label for="f-org">Organizer</label><select id="f-org"></select></div>
+    <div class="field"><label for="f-event">Event</label><select id="f-event"></select></div>
+    <div class="field"><label for="f-owner">Owner</label><select id="f-owner"></select></div>
+    <div class="field"><label for="f-search">Search</label><input type="search" id="f-search" placeholder="Task, contact, requirement"></div>
+    <div class="seg" role="group" aria-label="View">
+      <button type="button" id="v-grid" aria-pressed="true">Grid</button>
+      <button type="button" id="v-cards" aria-pressed="false">Cards</button>
     </div>
-    <div class="field">
-      <label for="f-event">Event</label>
-      <select id="f-event"></select>
-    </div>
-    <div class="field">
-      <label for="f-owner">Owner</label>
-      <select id="f-owner"></select>
-    </div>
-    <div class="field">
-      <label for="f-search">Search</label>
-      <input type="search" id="f-search" placeholder="Find a task, contact, requirement">
-    </div>
-    <button class="btn secondary" id="btn-reset" type="button">Reset filters</button>
-    <button class="btn" id="btn-print" type="button">Print this view</button>
+    <button class="btn secondary" id="btn-reset" type="button">Reset</button>
+    <button class="btn" id="btn-print" type="button">Print</button>
   </div>
   <div class="chips" id="phase-chips" role="group" aria-label="Filter by phase"></div>
 </div>
 
-<div class="summary hidden" id="summary"></div>
-
-<main id="board"></main>
-
-<div class="state hidden" id="setup-state">
-  <h2>Connect your Google Sheet</h2>
-  <p>This page has no sheet linked yet. Open <code>index.html</code> and set <code>SHEET_ID</code> at the top of the script to your Google Sheet ID (the long string in the sheet URL between <code>/d/</code> and <code>/edit</code>).</p>
-  <ol>
-    <li>In Google Sheets: File &gt; Share &gt; Publish to web (the whole document, as web page).</li>
-    <li>Also set sharing to "Anyone with the link: Viewer". Both are needed for the gviz feed.</li>
-    <li>Keep the data tab named <code>Playbook</code>, or update <code>SHEET_TAB</code> in the script.</li>
-    <li>Commit and push. The page reads the sheet live on every load.</li>
-  </ol>
+<div class="wrap">
+  <div class="alerts hidden" id="alerts"></div>
+  <div class="summary hidden" id="summary"></div>
+  <main id="board"></main>
 </div>
 
 <div class="state hidden" id="error-state">
   <h2>Could not load the sheet</h2>
   <p id="error-detail"></p>
-  <p>Check that the sheet is published to web, link sharing is on, and the tab name matches <code>SHEET_TAB</code>.</p>
+  <p>Check the sheet is published to web, link sharing is on, and the tab is named <code>Playbook</code>.</p>
 </div>
-
 <div class="state" id="loading-state"><h2>Loading playbook…</h2></div>
+<footer></footer>
 
 <script>
 /* ================= CONFIG ================= */
-const SHEET_ID  = "1Wf1DJYOSA_sVNFW9jtQa0LtoImuNR3qusyCK9mfVU94";
-const SHEET_TAB = "Playbook";
+const SHEET_ID   = "1Wf1DJYOSA_sVNFW9jtQa0LtoImuNR3qusyCK9mfVU94";
+const SHEET_TAB  = "Playbook";
+const EVENTS_TAB = "Events";
 /* ========================================== */
 
-const COLS = {
-  org:"Organizer", type:"Engagement Type", phase:"Phase", task:"Task",
+const COLS = {org:"Organizer", type:"Engagement Type", phase:"Phase", task:"Task",
   req:"Requirement & Specs", owner:"Owner", lead:"Lead Time",
-  deps:"Dependencies", contact:"External Contact", gotcha:"Gotchas / Notes", event:"Event"
-};
+  deps:"Dependencies", contact:"External Contact", gotcha:"Gotchas / Notes", event:"Event"};
 
-let DATA = [];
-let activePhase = "";
+let DATA = [], EVENTS = {}, activePhase = "", fmt = "", view = "grid";
+let DONE = {};
+try { DONE = JSON.parse(localStorage.getItem("playbook-done") || "{}"); } catch(e) { DONE = {}; }
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DAY = 86400000;
+const today0 = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
+const fmtDate = d => d ? d.toLocaleDateString("en-IN", {day:"numeric", month:"short"}) : "";
+const fmtDateY = d => d ? d.toLocaleDateString("en-IN", {day:"numeric", month:"short", year:"numeric"}) : "";
 
 function phaseLabel(p){ return String(p||"").replace(/^\d+\s*-\s*/, ""); }
 function phaseNum(p){ const m = String(p||"").match(/^(\d+)/); return m ? m[1] : "•"; }
+function isWebinar(r){ return /webinar/i.test(r[COLS.type] || ""); }
+function keyOf(r){ return (r[COLS.event]||"") + "|" + (r[COLS.task]||""); }
+
+function parseGvizDate(v){
+  if(!v) return null;
+  const s = String(v);
+  let m = s.match(/Date\((\d+),(\d+),(\d+)/);
+  if(m) return new Date(+m[1], +m[2], +m[3]);
+  m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(m) return new Date(+m[1], +m[2]-1, +m[3]);
+  const d = new Date(s);
+  return isNaN(d) ? null : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function leadOffset(lead){
+  const s = String(lead||"");
+  if(/event day/i.test(s)) return {kind:"event"};
+  const m = s.match(/T\s*([+-])\s*(\d+)\s*(wks?|weeks?|days?|d\b|mos?|months?)?/i);
+  if(!m) return null;
+  const n = +m[2]; const u = (m[3]||"").toLowerCase();
+  const days = u.startsWith("w") ? n*7 : u.startsWith("mo") ? n*30 : n;
+  return {kind:"rel", sign: m[1]==="-" ? -1 : 1, days};
+}
+
+function dueDate(r){
+  const ev = EVENTS[r[COLS.event]];
+  if(!ev || !ev.start) return null;
+  const off = leadOffset(r[COLS.lead]);
+  if(!off) return null;
+  if(off.kind === "event") return ev.start;
+  const base = off.sign < 0 ? ev.start : (ev.end || ev.start);
+  return new Date(base.getTime() + off.sign * off.days * DAY);
+}
+
+function eventState(name){
+  const ev = EVENTS[name];
+  if(!ev) return {label:"", cls:"", past:false};
+  const t = today0();
+  if((ev.status||"").toLowerCase().startsWith("complete") || (ev.end && ev.end < t) || (!ev.end && ev.start && ev.start < t))
+    return {label:"completed", cls:"past", past:true};
+  if(ev.start && ev.start <= t && (ev.end||ev.start) >= t) return {label:"LIVE NOW", cls:"soon", past:false};
+  if(ev.start){ const d = Math.round((ev.start - t)/DAY); return {label:"in " + d + " day" + (d===1?"":"s"), cls:"", past:false}; }
+  return {label: ev.status || "", cls:"", past:false};
+}
+
+async function fetchTab(tab){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(tab)}`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}")+1));
+  const headers = json.table.cols.map(c => (c.label || "").trim());
+  return (json.table.rows || []).map(r => {
+    const o = {};
+    headers.forEach((h,i)=>{ o[h] = r.c && r.c[i] && r.c[i].v != null ? String(r.c[i].v).trim() : ""; });
+    return o;
+  });
+}
 
 async function load(){
-  if(!SHEET_ID || SHEET_ID.startsWith("PASTE_")){
-    $("loading-state").classList.add("hidden");
-    $("controls").classList.add("hidden");
-    $("setup-state").classList.remove("hidden");
-    return;
-  }
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(SHEET_TAB)}`;
   try{
-    const res = await fetch(url);
-    const text = await res.text();
-    const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}")+1));
-    const headers = json.table.cols.map(c => (c.label || "").trim());
-    DATA = (json.table.rows || []).map(r => {
-      const o = {};
-      headers.forEach((h,i)=>{ o[h] = r.c && r.c[i] && r.c[i].v != null ? String(r.c[i].v).trim() : ""; });
-      return o;
-    }).filter(o => o[COLS.task]);
+    DATA = (await fetchTab(SHEET_TAB)).filter(o => o[COLS.task]);
     $("loading-state").classList.add("hidden");
-    $("last-loaded").textContent = "Live from Google Sheets · " + new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
-    buildFilters();
-    render();
   }catch(e){
     $("loading-state").classList.add("hidden");
     $("error-state").classList.remove("hidden");
     $("error-detail").textContent = e.message;
+    return;
   }
+  try{
+    (await fetchTab(EVENTS_TAB)).forEach(r => {
+      if(r["Event"]) EVENTS[r["Event"]] = {
+        start: parseGvizDate(r["Start Date"]), end: parseGvizDate(r["End Date"]),
+        location: r["Location"]||"", status: r["Status"]||"" };
+    });
+  }catch(e){ /* Events tab optional */ }
+  buildFilters(); render();
 }
 
-function uniques(key){
-  return [...new Set(DATA.map(r => r[key]).filter(Boolean))];
+function uniques(rows, key){ return [...new Set(rows.map(r => r[key]).filter(Boolean))]; }
+
+function scopeRows(){
+  return DATA.filter(r => !fmt || (fmt==="webinar" ? isWebinar(r) : !isWebinar(r)));
 }
 
-function fillSelect(id, values, allLabel){
-  const sel = $(id);
-  const prev = sel.value;
-  sel.innerHTML = `<option value="">${allLabel}</option>` + values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
-  if([...sel.options].some(o=>o.value===prev)) sel.value = prev;
+function fillSelect(id, values, allLabel, labeler){
+  const sel = $(id); const prev = sel.value;
+  sel.innerHTML = `<option value="">${allLabel}</option>` +
+    values.map(v=>`<option value="${esc(v)}">${esc(labeler ? labeler(v) : v)}</option>`).join("");
+  sel.value = [...sel.options].some(o=>o.value===prev) ? prev : "";
+}
+
+function eventLabel(v){
+  if(v === "Any") return "Evergreen templates";
+  const st = eventState(v);
+  return st.label ? `${v} • ${st.label}` : v;
+}
+
+function sortEvents(list){
+  const t = today0();
+  return list.sort((a,b)=>{
+    const rank = n => {
+      if(n === "Any") return 2;
+      const st = eventState(n); if(st.past) return 3;
+      return 1;
+    };
+    const ra = rank(a), rb = rank(b);
+    if(ra !== rb) return ra - rb;
+    const ea = EVENTS[a], eb = EVENTS[b];
+    if(ea && eb && ea.start && eb.start) return ea.start - eb.start;
+    return a.localeCompare(b);
+  });
 }
 
 function buildFilters(){
-  fillSelect("f-org", uniques(COLS.org).sort(), "All organizers");
-  fillSelect("f-type", uniques(COLS.type).sort(), "All types");
-  fillSelect("f-event", uniques(COLS.event).sort(), "All events");
-  fillSelect("f-owner", uniques(COLS.owner).sort(), "All owners");
+  const scoped = scopeRows();
+  const org = $("f-org").value;
+  fillSelect("f-org", uniques(scoped, COLS.org).sort(), "All organizers");
+  const evScope = scoped.filter(r => !$("f-org").value || r[COLS.org] === $("f-org").value);
+  fillSelect("f-event", sortEvents(uniques(evScope, COLS.event)), "All events", eventLabel);
+  fillSelect("f-owner", uniques(scoped, COLS.owner).sort(), "All owners");
 
-  const phases = uniques(COLS.phase).sort();
+  const phases = uniques(scoped, COLS.phase).sort();
   $("phase-chips").innerHTML = phases.map(p =>
-    `<button class="chip" type="button" data-phase="${esc(p)}" aria-pressed="false">${esc(phaseLabel(p))}</button>`
-  ).join("");
+    `<button class="chip" type="button" data-phase="${esc(p)}" aria-pressed="${String(p===activePhase)}">${esc(phaseLabel(p))}</button>`).join("");
   $("phase-chips").querySelectorAll(".chip").forEach(ch=>{
     ch.addEventListener("click", ()=>{
       activePhase = (activePhase === ch.dataset.phase) ? "" : ch.dataset.phase;
@@ -289,71 +331,183 @@ function buildFilters(){
 }
 
 function filtered(){
-  const org = $("f-org").value, type = $("f-type").value, owner = $("f-owner").value, ev = $("f-event").value;
+  const org = $("f-org").value, ev = $("f-event").value, owner = $("f-owner").value;
   const q = $("f-search").value.trim().toLowerCase();
-  return DATA.filter(r =>
+  return scopeRows().filter(r =>
     (!org || r[COLS.org]===org) &&
-    (!type || r[COLS.type]===type) &&
-    (!owner || r[COLS.owner]===owner) &&
     (!ev || r[COLS.event]===ev) &&
+    (!owner || r[COLS.owner]===owner) &&
     (!activePhase || r[COLS.phase]===activePhase) &&
     (!q || Object.values(r).join(" ").toLowerCase().includes(q))
   );
 }
 
-function render(){
-  const rows = filtered();
-
-  // summary strip
-  const byOwner = {};
-  rows.forEach(r => { const o = r[COLS.owner] || "Unassigned"; byOwner[o] = (byOwner[o]||0)+1; });
-  const ownerPills = Object.entries(byOwner).sort((a,b)=>b[1]-a[1])
-    .map(([o,n]) => `<span class="pill">${esc(o)}: ${n}</span>`).join("");
-  $("summary").innerHTML = `<span><span class="count">${rows.length}</span> task${rows.length===1?"":"s"} in view</span>${ownerPills}`;
-  $("summary").classList.toggle("hidden", rows.length===0);
-
-  // group by phase
-  const groups = {};
-  rows.forEach(r => { (groups[r[COLS.phase] || "Other"] ??= []).push(r); });
-  const orderedPhases = Object.keys(groups).sort();
-
-  $("board").innerHTML = orderedPhases.map(p => `
-    <section class="phase">
-      <div class="phase-h"><span class="phase-num">${esc(phaseNum(p))}</span><h2>${esc(phaseLabel(p))}</h2></div>
-      <div class="phase-body">
-        ${groups[p].map(r => `
-          <article class="task">
-            <div class="task-top">
-              <div class="task-name">${esc(r[COLS.task])}</div>
-              <div class="badges">
-                ${r[COLS.event] && r[COLS.event]!=="Any" ? `<span class="badge event">${esc(r[COLS.event])}</span>` : ""}
-                ${r[COLS.lead] ? `<span class="badge lead">${esc(r[COLS.lead])}</span>` : ""}
-                ${r[COLS.owner] ? `<span class="badge owner">${esc(r[COLS.owner])}</span>` : ""}
-              </div>
-            </div>
-            ${r[COLS.req] ? `<div class="task-req">${esc(r[COLS.req])}</div>` : ""}
-            ${(r[COLS.deps] || r[COLS.contact]) ? `<div class="task-meta">
-              ${r[COLS.deps] ? `<span><b>Depends on:</b> ${esc(r[COLS.deps])}</span>` : ""}
-              ${r[COLS.contact] ? `<span><b>Contact:</b> ${esc(r[COLS.contact])}</span>` : ""}
-            </div>` : ""}
-            ${r[COLS.gotcha] ? `<div class="gotcha"><b>GOTCHA:</b> ${esc(r[COLS.gotcha])}</div>` : ""}
-          </article>
-        `).join("")}
-      </div>
-    </section>
-  `).join("") || `<div class="state"><h2>No tasks match these filters</h2><p>Try resetting the filters, or add rows to the Playbook tab in the sheet.</p></div>`;
+function dueChip(r){
+  const ev = r[COLS.event];
+  const st = eventState(ev);
+  const due = dueDate(r);
+  const lead = r[COLS.lead] ? esc(r[COLS.lead]) : "";
+  if(!due) return lead ? `<span class="t-due ${st.past?'past':''}">${lead}</span>` : "";
+  if(st.past) return `<span class="t-due past">${lead}</span>`;
+  const t = today0(); const diff = Math.round((due - t)/DAY);
+  if(diff < 0) return `<span class="t-due over">Overdue • was ${fmtDate(due)}</span>`;
+  if(diff === 0) return `<span class="t-due over">Due TODAY</span>`;
+  if(diff <= 7) return `<span class="t-due soon">Due in ${diff}d • ${fmtDate(due)}</span>`;
+  return `<span class="t-due">${fmtDate(due)} • ${lead}</span>`;
 }
 
-["f-org","f-type","f-event","f-owner"].forEach(id => $(id).addEventListener("change", render));
-$("f-search").addEventListener("input", render);
-$("btn-reset").addEventListener("click", ()=>{
-  ["f-org","f-type","f-event","f-owner"].forEach(id => $(id).value = "");
-  $("f-search").value = "";
-  activePhase = "";
-  document.querySelectorAll("#phase-chips .chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+function renderAlerts(rows){
+  const t = today0(); const items = [];
+  rows.forEach(r => {
+    if(DONE[keyOf(r)]) return;
+    const st = eventState(r[COLS.event]); if(st.past || r[COLS.event]==="Any") return;
+    const due = dueDate(r); if(!due) return;
+    const diff = Math.round((due - t)/DAY);
+    if(diff <= 7) items.push({r, due, diff});
+  });
+  items.sort((a,b)=>a.due-b.due);
+  if(!items.length){ $("alerts").classList.add("hidden"); return; }
+  const show = items.slice(0,8);
+  $("alerts").innerHTML = `<h3>Needs attention • next 7 days${items.length>8 ? " (showing 8 of "+items.length+")" : ""}</h3>` +
+    show.map(({r,due,diff}) => `<div class="alert-item">
+      <span class="when ${diff<0?'over':'soon'}">${diff<0 ? "OVERDUE (was "+fmtDate(due)+")" : diff===0 ? "TODAY" : "in "+diff+"d ("+fmtDate(due)+")"}</span>
+      <span>${esc(r[COLS.task])}</span>
+      <span class="ev">${esc(r[COLS.event])} • ${esc(r[COLS.owner]||"")}</span>
+    </div>`).join("");
+  $("alerts").classList.remove("hidden");
+}
+
+function render(){
+  buildEventOptions();
+  const rows = filtered();
+  renderAlerts(rows);
+
+  const byOwner = {};
+  rows.forEach(r => { const o = r[COLS.owner] || "Unassigned"; byOwner[o]=(byOwner[o]||0)+1; });
+  const doneCount = rows.filter(r=>DONE[keyOf(r)]).length;
+  $("summary").innerHTML =
+    `<span><span class="count">${rows.length}</span> tasks • <span class="count">${doneCount}</span> done</span>` +
+    Object.entries(byOwner).sort((a,b)=>b[1]-a[1]).map(([o,n])=>`<span class="pill">${esc(o)}: ${n}</span>`).join("") +
+    `<span class="legend"><span class="le">In-person event</span><span class="lw">Webinar</span></span>`;
+  $("summary").classList.toggle("hidden", rows.length===0);
+
+  const groups = {};
+  rows.forEach(r => { (groups[r[COLS.phase]||"Other"] ??= []).push(r); });
+  const phases = Object.keys(groups).sort();
+
+  $("board").innerHTML = phases.map(p => {
+    const g = groups[p];
+    const d = g.filter(r=>DONE[keyOf(r)]).length;
+    const head = `<div class="phase-h"><span class="phase-num">${esc(phaseNum(p))}</span><h2>${esc(phaseLabel(p))}</h2>
+      <span class="phase-prog">${d}/${g.length}<span class="bar"><i style="width:${g.length? Math.round(100*d/g.length):0}%"></i></span></span></div>`;
+    return `<section class="phase">${head}${view==="grid" ? gridHTML(g) : cardsHTML(g)}</section>`;
+  }).join("") || `<div class="state"><h2>No tasks match these filters</h2></div>`;
+
+  wireRows();
+}
+
+function gridHTML(g){
+  return `<div class="grid">` + g.map((r,i) => {
+    const k = keyOf(r), web = isWebinar(r), done = !!DONE[k];
+    const id = "d_" + Math.random().toString(36).slice(2,9);
+    return `<div class="row clickable ${web?'webinar':''} ${done?'done':''}" data-detail="${id}">
+      <input type="checkbox" data-key="${esc(k)}" ${done?'checked':''} aria-label="Mark done">
+      <span class="t-name">${esc(r[COLS.task])}</span>
+      ${r[COLS.gotcha] ? '<span class="t-gflag" title="Has a gotcha">&#9888;</span>' : ''}
+      ${dueChip(r)}
+      ${r[COLS.owner] ? `<span class="t-owner">${esc(r[COLS.owner])}</span>` : ""}
+    </div>
+    <div class="detail ${web?'webinar':''}" id="${id}">
+      ${r[COLS.req] ? `<div>${esc(r[COLS.req])}</div>` : ""}
+      <div style="margin-top:6px">
+        ${r[COLS.lead] ? `<b>Lead time:</b> ${esc(r[COLS.lead])} &nbsp; ` : ""}
+        ${r[COLS.deps] ? `<b>Depends on:</b> ${esc(r[COLS.deps])} &nbsp; ` : ""}
+        ${r[COLS.contact] ? `<b>Contact:</b> ${esc(r[COLS.contact])}` : ""}
+      </div>
+      ${r[COLS.gotcha] ? `<div class="gotcha"><b>GOTCHA:</b> ${esc(r[COLS.gotcha])}</div>` : ""}
+    </div>`;
+  }).join("") + `</div>`;
+}
+
+function cardsHTML(g){
+  return g.map(r => {
+    const web = isWebinar(r);
+    return `<article class="task ${web?'webinar':''}">
+      <div class="task-top">
+        <div class="task-name">${esc(r[COLS.task])}</div>
+        <div class="badges">${dueChip(r)}${r[COLS.owner] ? `<span class="t-owner">${esc(r[COLS.owner])}</span>` : ""}</div>
+      </div>
+      ${r[COLS.req] ? `<div class="task-req">${esc(r[COLS.req])}</div>` : ""}
+      ${(r[COLS.deps]||r[COLS.contact]) ? `<div class="task-meta">
+        ${r[COLS.deps] ? `<span><b>Depends on:</b> ${esc(r[COLS.deps])}</span>` : ""}
+        ${r[COLS.contact] ? `<span><b>Contact:</b> ${esc(r[COLS.contact])}</span>` : ""}</div>` : ""}
+      ${r[COLS.gotcha] ? `<div class="gotcha"><b>GOTCHA:</b> ${esc(r[COLS.gotcha])}</div>` : ""}
+    </article>`;
+  }).join("");
+}
+
+function wireRows(){
+  document.querySelectorAll(".row input[type=checkbox]").forEach(cb=>{
+    cb.addEventListener("click", e => e.stopPropagation());
+    cb.addEventListener("change", ()=>{
+      const k = cb.dataset.key;
+      if(cb.checked) DONE[k] = true; else delete DONE[k];
+      try{ localStorage.setItem("playbook-done", JSON.stringify(DONE)); }catch(e){}
+      render();
+    });
+  });
+  document.querySelectorAll(".row.clickable").forEach(row=>{
+    row.addEventListener("click", ()=>{
+      const d = document.getElementById(row.dataset.detail);
+      if(d) d.classList.toggle("open");
+    });
+  });
+}
+
+function buildEventOptions(){
+  const scoped = scopeRows();
+  const org = $("f-org").value;
+  const evScope = scoped.filter(r => !org || r[COLS.org] === org);
+  const cur = $("f-event").value;
+  fillSelect("f-event", sortEvents(uniques(evScope, COLS.event)), "All events", eventLabel);
+  if([...$("f-event").options].some(o=>o.value===cur)) $("f-event").value = cur;
+}
+
+/* ---------- wiring ---------- */
+$("f-org").addEventListener("change", ()=>{ $("f-event").value=""; render(); });
+$("f-event").addEventListener("change", ()=>{
+  const ev = $("f-event").value;
+  if(ev){
+    const row = DATA.find(r => r[COLS.event]===ev && (!$("f-org").value || r[COLS.org]===$("f-org").value)) || DATA.find(r => r[COLS.event]===ev);
+    if(row && ev !== "Any") $("f-org").value = row[COLS.org];
+  }
   render();
 });
+$("f-owner").addEventListener("change", render);
+$("f-search").addEventListener("input", render);
+$("format-seg").querySelectorAll("button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    fmt = b.dataset.fmt;
+    $("format-seg").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+    buildFilters(); render();
+  });
+});
+$("v-grid").addEventListener("click", ()=>{ view="grid"; $("v-grid").setAttribute("aria-pressed","true"); $("v-cards").setAttribute("aria-pressed","false"); render(); });
+$("v-cards").addEventListener("click", ()=>{ view="cards"; $("v-cards").setAttribute("aria-pressed","true"); $("v-grid").setAttribute("aria-pressed","false"); render(); });
+$("btn-reset").addEventListener("click", ()=>{
+  ["f-org","f-event","f-owner"].forEach(id=>$(id).value="");
+  $("f-search").value=""; activePhase=""; fmt="";
+  $("format-seg").querySelectorAll("button").forEach((x,i)=>x.setAttribute("aria-pressed", String(i===0)));
+  buildFilters(); render();
+});
 $("btn-print").addEventListener("click", ()=>window.print());
+
+function tick(){
+  const now = new Date();
+  $("clock").textContent = now.toLocaleTimeString("en-IN", {hour12:false, timeZone:"Asia/Kolkata"}) + " IST";
+  $("today").textContent = now.toLocaleDateString("en-IN", {weekday:"short", day:"numeric", month:"short", year:"numeric", timeZone:"Asia/Kolkata"});
+}
+tick(); setInterval(tick, 1000);
 
 load();
 </script>
